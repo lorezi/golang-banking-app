@@ -3,43 +3,26 @@ package app
 import (
 	"encoding/json"
 	"encoding/xml"
-	"fmt"
 	"net/http"
 
-	"github.com/gorilla/mux"
-	"github.com/lorezi/golang-bank-app/models"
+	"github.com/lorezi/golang-bank-app/service"
 )
 
-func Greet(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "Hello World!")
+type CustomerHandlers struct {
+	service service.CustomerService
 }
 
-func GetAllCustomers(w http.ResponseWriter, r *http.Request) {
-	sc := []models.Customer{
-		{
-			Name: "John Doe", City: "New York", Zipcode: "1100034",
-		},
-		{
-			Name: "Jane Doe", City: "Silicon Valley", Zipcode: "8900001",
-		},
-	}
+func (ch *CustomerHandlers) getAllCustomers(w http.ResponseWriter, r *http.Request) {
+
+	customers, _ := ch.service.GetAllCustomers()
 
 	if r.Header.Get("Content-Type") == "application/xml" {
 		w.Header().Add("Content-Type", "application/xml")
-		xml.NewEncoder(w).Encode(sc)
+		xml.NewEncoder(w).Encode(customers)
 	}
 
 	w.Header().Add("Content-Type", "application/json")
 	// encode struct to json
-	json.NewEncoder(w).Encode(sc)
+	json.NewEncoder(w).Encode(customers)
 
-}
-
-func GetCustomer(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	fmt.Fprint(w, vars["customer_id"])
-}
-
-func CreateCustomer(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "Post request received")
 }
