@@ -9,7 +9,7 @@ build: clean
 .PHONY: run
 ## run: runs the go run build-binary
 run: build
-	./boolang
+	./banking_app
 
 .PHONY: watch
 ## watch: watch the project for go file changes
