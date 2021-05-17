@@ -1,3 +1,5 @@
+APP?=banking_app
+
 .PHONY: build
 ## build: build the application
 build: clean
