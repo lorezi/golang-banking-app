@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/gorilla/mux"
 	"github.com/lorezi/golang-bank-app/models"
 )
 
@@ -32,4 +33,13 @@ func GetAllCustomers(w http.ResponseWriter, r *http.Request) {
 	// encode struct to json
 	json.NewEncoder(w).Encode(sc)
 
+}
+
+func GetCustomer(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	fmt.Fprint(w, vars["customer_id"])
+}
+
+func CreateCustomer(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprint(w, "Post request received")
 }
