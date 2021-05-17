@@ -6,10 +6,14 @@ import (
 )
 
 func Start() {
+
+	// created multiplexer
+	mux := http.NewServeMux()
+
 	// defining routes
-	http.HandleFunc("/greet", Greet)
-	http.HandleFunc("/customers", GetAllCustomers)
+	mux.HandleFunc("/greet", Greet)
+	mux.HandleFunc("/customers", GetAllCustomers)
 
 	// starting serve
-	log.Fatal(http.ListenAndServe(":8000", nil))
+	log.Fatal(http.ListenAndServe(":8000", mux))
 }
