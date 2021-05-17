@@ -8,16 +8,16 @@ import (
 )
 
 type Customer struct {
-	Name    string
-	City    string
-	Zipcode string
+	Name    string `json:"name"`
+	City    string `json:"city"`
+	Zipcode string `json:"zip_code"`
 }
 
-func greet(rw http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(rw, "Hello World!")
+func greet(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprint(w, "Hello World!")
 }
 
-func getAllCustomers(rw http.ResponseWriter, r *http.Request) {
+func getAllCustomers(w http.ResponseWriter, r *http.Request) {
 	sc := []Customer{
 		{
 			Name: "John Doe", City: "New York", Zipcode: "1100034",
@@ -27,7 +27,9 @@ func getAllCustomers(rw http.ResponseWriter, r *http.Request) {
 		},
 	}
 
-	json.NewEncoder(rw).Encode(sc)
+	w.Header().Add("Content-Type", "application/json")
+
+	json.NewEncoder(w).Encode(sc)
 }
 
 func main() {
