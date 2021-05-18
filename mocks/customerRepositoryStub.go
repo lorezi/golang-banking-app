@@ -1,12 +1,37 @@
 package mocks
 
-import "github.com/lorezi/golang-bank-app/domain"
+import (
+	"github.com/lorezi/golang-bank-app/domain"
+)
 
 type CustomerRepositoryStub struct {
 	customers []domain.Customer
 }
 
-func (s CustomerRepositoryStub) FindAll() ([]domain.Customer, error) {
+func (s CustomerRepositoryStub) FindAll(status string) ([]domain.Customer, error) {
+
+	sc := []domain.Customer{}
+
+	if status == "active" {
+
+		for _, v := range s.customers {
+			if v.Status {
+				sc = append(sc, v)
+			}
+		}
+
+		return sc, nil
+	}
+
+	if status == "inactive" {
+		for _, v := range s.customers {
+			if !v.Status {
+				sc = append(sc, v)
+			}
+		}
+		return sc, nil
+	}
+
 	return s.customers, nil
 }
 

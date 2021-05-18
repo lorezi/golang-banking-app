@@ -14,9 +14,18 @@ type CustomerRepositoryDb struct {
 	client *sql.DB
 }
 
-func (s *CustomerRepositoryDb) FindAll() ([]domain.Customer, error) {
+func (s *CustomerRepositoryDb) FindAll(status string) ([]domain.Customer, error) {
 
 	allQry := "select customer_id, name, city, zipcode, date_of_birth, status from customers"
+
+	if status == "active" {
+		allQry = allQry + " where status = 1"
+	}
+
+	if status == "inactive" {
+		allQry = allQry + " where status = 0"
+	}
+
 	rows, err := s.client.Query(allQry)
 
 	if err != nil {
