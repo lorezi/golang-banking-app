@@ -17,3 +17,7 @@ func (s *DefaultCustomerService) GetAllCustomers(status string) ([]domain.Custom
 
 	return s.repo.FindAll(status)
 }
+
+func (s *DefaultCustomerService) GetCustomer(id string) (*domain.Customer, error) {
+	return s.repo.GetById(id)
+}

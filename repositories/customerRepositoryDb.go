@@ -48,6 +48,21 @@ func (s *CustomerRepositoryDb) FindAll(status string) ([]domain.Customer, error)
 	return sc, nil
 }
 
+func (s *CustomerRepositoryDb) GetById(id string) (*domain.Customer, error) {
+	qry := "select customer_id, name, city, zipcode, date_of_birth, status from customers where customer_id = ?"
+
+	row := s.client.QueryRow(qry, id)
+
+	c := &domain.Customer{}
+	err := row.Scan(&c.Id, &c.Name, &c.City, &c.Zipcode, &c.DateofBirth, &c.Status)
+	if err != nil {
+		log.Println("Error while scanning customers" + err.Error())
+		return nil, err
+	}
+
+	return c, nil
+}
+
 func NewCustomerRepositoryDb() *CustomerRepositoryDb {
 	c, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/banking")
 	if err != nil {

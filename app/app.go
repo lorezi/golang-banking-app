@@ -29,7 +29,7 @@ func Start() {
 
 	router.HandleFunc("/customers", ch.GetAllCustomers).Methods("GET")
 	// allow customer id with only alpha numeric and underscore character
-	// router.HandleFunc("/customers/{customer_id:[a-zA-Z0-9_]+}", GetCustomer).Methods("POST")
+	router.HandleFunc("/customers/{customer_id:[a-zA-Z0-9_]+}", ch.GetCustomer).Methods("GET")
 	// router.HandleFunc("/customers", ch.GetAllCustomers).Methods("GET")
 
 	// starting serve
