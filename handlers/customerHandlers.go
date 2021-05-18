@@ -1,4 +1,4 @@
-package app
+package handlers
 
 import (
 	"encoding/json"
@@ -9,12 +9,12 @@ import (
 )
 
 type CustomerHandlers struct {
-	service ports.CustomerService
+	CustomerService ports.CustomerService
 }
 
-func (ch *CustomerHandlers) getAllCustomers(w http.ResponseWriter, r *http.Request) {
+func (ch *CustomerHandlers) GetAllCustomers(w http.ResponseWriter, r *http.Request) {
 
-	customers, _ := ch.service.GetAllCustomers()
+	customers, _ := ch.CustomerService.GetAllCustomers()
 
 	if r.Header.Get("Content-Type") == "application/xml" {
 		w.Header().Add("Content-Type", "application/xml")

@@ -6,20 +6,24 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/lorezi/golang-bank-app/domain"
+	"github.com/lorezi/golang-bank-app/handlers"
 	"github.com/lorezi/golang-bank-app/service"
 )
 
 func Start() {
 
 	// wiring
-	ch := CustomerHandlers{service: service.NewCustomerService(domain.NewCustomerRepositoryStub())}
+	ch := handlers.CustomerHandlers{
+		CustomerService: service.NewCustomerService(domain.NewCustomerRepositoryStub()),
+	}
+	// service: service.NewCustomerService(domain.NewCustomerRepositoryStub()),
 
 	// created multiplexer
 	router := mux.NewRouter()
 
 	// defining routes
 
-	router.HandleFunc("/customers", ch.getAllCustomers).Methods("GET")
+	router.HandleFunc("/customers", ch.GetAllCustomers).Methods("GET")
 	// allow customer id with only alpha numeric and underscore character
 	// router.HandleFunc("/customers/{customer_id:[a-zA-Z0-9_]+}", GetCustomer).Methods("POST")
 	// router.HandleFunc("/customers", CreateCustomer).Methods("POST")

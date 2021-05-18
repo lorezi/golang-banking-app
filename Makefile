@@ -28,6 +28,17 @@ clean:
 test:
 	go test -v -count=1 -race ./...
 
+.PHONY: docker-compose-up
+## docker-compose-up: to spin up multiple services
+docker-compose-up:
+	docker-compose up --build
+
+.PHONY: docker-compose-down
+## docker-compose-down: to stop and remove unwanted image builds
+docker-compose-down:
+	docker-compose down
+	docker system prune --volumes --force
+
 
 .PHONY: help
 ## help: prints this help message
