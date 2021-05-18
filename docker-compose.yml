@@ -15,11 +15,15 @@ services:
     image: mysql:8.0.23
     restart: always
     environment:
-      MYSQL_DATABASE: banking
       MYSQL_USER: johnwick
       MYSQL_PASSWORD: root
       MYSQL_ROOT_PASSWORD: root
     volumes:
-      - .dbdata:/var/lib/mysql
+      - mysqldata:/var/lib/mysql
+      - ./initdb:/docker-entrypoint-initdb.d
     ports:
       - 33066:3306
+
+volumes:
+  mysqldata:
+    driver: local
