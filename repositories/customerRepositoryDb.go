@@ -14,9 +14,18 @@ type CustomerRepositoryDb struct {
 	client *sql.DB
 }
 
-func (s *CustomerRepositoryDb) FindAll() ([]domain.Customer, error) {
+func (s *CustomerRepositoryDb) FindAll(status string) ([]domain.Customer, error) {
 
 	allQry := "select customer_id, name, city, zipcode, date_of_birth, status from customers"
+
+	if status == "active" {
+		allQry = allQry + " where status = 1"
+	}
+
+	if status == "inactive" {
+		allQry = allQry + " where status = 0"
+	}
+
 	rows, err := s.client.Query(allQry)
 
 	if err != nil {
@@ -37,6 +46,21 @@ func (s *CustomerRepositoryDb) FindAll() ([]domain.Customer, error) {
 	}
 
 	return sc, nil
+}
+
+func (s *CustomerRepositoryDb) GetById(id string) (*domain.Customer, error) {
+	qry := "select customer_id, name, city, zipcode, date_of_birth, status from customers where customer_id = ?"
+
+	row := s.client.QueryRow(qry, id)
+
+	c := &domain.Customer{}
+	err := row.Scan(&c.Id, &c.Name, &c.City, &c.Zipcode, &c.DateofBirth, &c.Status)
+	if err != nil {
+		log.Println("Error while scanning customers" + err.Error())
+		return nil, err
+	}
+
+	return c, nil
 }
 
 func NewCustomerRepositoryDb() *CustomerRepositoryDb {
