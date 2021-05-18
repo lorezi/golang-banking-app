@@ -5,8 +5,8 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/lorezi/golang-bank-app/domain"
 	"github.com/lorezi/golang-bank-app/handlers"
+	"github.com/lorezi/golang-bank-app/mocks"
 	"github.com/lorezi/golang-bank-app/service"
 )
 
@@ -14,7 +14,7 @@ func Start() {
 
 	// wiring
 	ch := handlers.CustomerHandlers{
-		CustomerService: service.NewCustomerService(domain.NewCustomerRepositoryStub()),
+		CustomerService: service.NewCustomerService(mocks.NewCustomerRepositoryStub()),
 	}
 	// service: service.NewCustomerService(domain.NewCustomerRepositoryStub()),
 

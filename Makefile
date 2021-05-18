@@ -28,6 +28,13 @@ clean:
 test:
 	go test -v -count=1 -race ./...
 
+
+.PHONY: start-db
+## start-db: to start mysql db instance
+start-db:
+	cd ./docker && docker-compose up --build
+	
+
 .PHONY: docker-compose-up
 ## docker-compose-up: to spin up multiple services
 docker-compose-up:
