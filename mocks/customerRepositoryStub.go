@@ -1,15 +1,17 @@
-package domain
+package mocks
+
+import "github.com/lorezi/golang-bank-app/domain"
 
 type CustomerRepositoryStub struct {
-	customers []Customer
+	customers []domain.Customer
 }
 
-func (s CustomerRepositoryStub) FindAll() ([]Customer, error) {
+func (s CustomerRepositoryStub) FindAll() ([]domain.Customer, error) {
 	return s.customers, nil
 }
 
 func NewCustomerRepositoryStub() CustomerRepositoryStub {
-	sc := []Customer{
+	sc := []domain.Customer{
 		{
 			Name: "John Doe", City: "New York", Zipcode: "1100034", DateofBirth: "2000-01-04", Status: true, Id: "100001",
 		},

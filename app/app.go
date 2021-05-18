@@ -5,18 +5,22 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/lorezi/golang-bank-app/domain"
 	"github.com/lorezi/golang-bank-app/handlers"
+	"github.com/lorezi/golang-bank-app/repositories"
 	"github.com/lorezi/golang-bank-app/service"
 )
 
 func Start() {
 
+	// Testing
+	// ch := handlers.CustomerHandlers{
+	// 	CustomerService: service.NewCustomerService(mocks.NewCustomerRepositoryStub()),
+	// }
+
 	// wiring
 	ch := handlers.CustomerHandlers{
-		CustomerService: service.NewCustomerService(domain.NewCustomerRepositoryStub()),
+		CustomerService: service.NewCustomerService(repositories.NewCustomerRepositoryDb()),
 	}
-	// service: service.NewCustomerService(domain.NewCustomerRepositoryStub()),
 
 	// created multiplexer
 	router := mux.NewRouter()
