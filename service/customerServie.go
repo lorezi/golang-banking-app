@@ -1,19 +1,18 @@
 package service
 
-import "github.com/lorezi/golang-bank-app/domain"
-
-type CustomerService interface {
-	GetAllCustomers() ([]domain.Customer, error)
-}
+import (
+	"github.com/lorezi/golang-bank-app/domain"
+	"github.com/lorezi/golang-bank-app/ports"
+)
 
 type DefaultCustomerService struct {
-	repo domain.CustomerRepository
+	repo ports.CustomerRepository
 }
 
-func (s DefaultCustomerService) GetAllCustomers() ([]domain.Customer, error) {
+func NewCustomerService(repository ports.CustomerRepository) *DefaultCustomerService {
+	return &DefaultCustomerService{repo: repository}
+}
+
+func (s *DefaultCustomerService) GetAllCustomers() ([]domain.Customer, error) {
 	return s.repo.FindAll()
-}
-
-func NewCustomerService(repository domain.CustomerRepository) DefaultCustomerService {
-	return DefaultCustomerService{repo: repository}
 }

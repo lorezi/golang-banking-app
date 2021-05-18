@@ -8,7 +8,3 @@ type Customer struct {
 	DateofBirth string
 	Status      bool
 }
-
-type CustomerRepository interface {
-	FindAll() ([]Customer, error)
-}

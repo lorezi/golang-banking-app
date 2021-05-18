@@ -5,11 +5,11 @@ import (
 	"encoding/xml"
 	"net/http"
 
-	"github.com/lorezi/golang-bank-app/service"
+	"github.com/lorezi/golang-bank-app/ports"
 )
 
 type CustomerHandlers struct {
-	service service.CustomerService
+	service ports.CustomerService
 }
 
 func (ch *CustomerHandlers) getAllCustomers(w http.ResponseWriter, r *http.Request) {
