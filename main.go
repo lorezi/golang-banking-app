@@ -7,7 +7,6 @@ import (
 
 func main() {
 
-	// log.Println("Starting our application...🧜🏽🧜🏽🤗")
-	logger.Log.Info("Starting the application... 🤝")
+	logger.Info("Starting the application... 🤝")
 	app.Start()
 }
