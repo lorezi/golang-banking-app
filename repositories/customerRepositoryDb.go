@@ -60,7 +60,7 @@ func (s *CustomerRepositoryDb) GetById(id string) (*domain.Customer, *errs.AppEr
 	if err != nil {
 		if err == sql.ErrNoRows {
 			msg := fmt.Sprintf("customer with id: %v not found", id)
-			return nil, errs.NotFoundError(msg, "fail")
+			return nil, errs.NotFoundError(msg, "fails")
 		}
 
 		log.Println("Error while scanning customers " + err.Error())
