@@ -33,6 +33,11 @@ test:
 ## start-db: to start mysql db instance
 start-db:
 	cd ./docker && docker-compose up --build
+
+.PHONY: stop-db
+## stop-db: to stop mysql db instance
+stop-db:
+	cd ./docker && docker-compose down
 	
 
 .PHONY: docker-compose-up
