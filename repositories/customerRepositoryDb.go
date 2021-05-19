@@ -2,6 +2,8 @@ package repositories
 
 import (
 	"database/sql"
+	"errors"
+	"fmt"
 	"log"
 	"time"
 
@@ -56,8 +58,13 @@ func (s *CustomerRepositoryDb) GetById(id string) (*domain.Customer, error) {
 	c := &domain.Customer{}
 	err := row.Scan(&c.Id, &c.Name, &c.City, &c.Zipcode, &c.DateofBirth, &c.Status)
 	if err != nil {
-		log.Println("Error while scanning customers" + err.Error())
-		return nil, err
+		if err == sql.ErrNoRows {
+			msg := fmt.Sprintf("customer with id: %v not found", id)
+			return nil, errors.New(msg)
+		}
+
+		log.Println("Error while scanning customers " + err.Error())
+		return nil, errors.New("unexpected database error")
 	}
 
 	return c, nil

@@ -39,7 +39,7 @@ func (c *CustomerHandlers) GetCustomer(w http.ResponseWriter, r *http.Request) {
 		w.Header().Add("Content-Type", "application/json")
 		r := dto.Result{
 			Status:  "fail",
-			Message: "record not found",
+			Message: err.Error(),
 		}
 
 		w.WriteHeader(http.StatusNotFound)
