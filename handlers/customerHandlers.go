@@ -17,12 +17,14 @@ func (ch *CustomerHandlers) GetAllCustomers(w http.ResponseWriter, r *http.Reque
 
 	status := r.URL.Query().Get("status")
 
-	customers, _ := ch.CustomerService.GetAllCustomers(status)
+	customers, err := ch.CustomerService.GetAllCustomers(status)
 
-	if r.Header.Get("Content-Type") == "application/xml" {
-		w.Header().Add("Content-Type", "application/xml")
-		xml.NewEncoder(w).Encode(customers)
+	if err != nil {
+		response(w, err.Code, err.ShowError())
+		return
 	}
+
+	response(w, http.StatusOK, customers)
 
 	w.Header().Add("Content-Type", "application/json")
 	// encode struct to json

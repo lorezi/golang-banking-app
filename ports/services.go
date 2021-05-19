@@ -6,6 +6,6 @@ import (
 )
 
 type CustomerService interface {
-	GetAllCustomers(status string) ([]domain.Customer, error)
+	GetAllCustomers(status string) ([]domain.Customer, *errs.AppError)
 	GetCustomer(id string) (*domain.Customer, *errs.AppError)
 }
