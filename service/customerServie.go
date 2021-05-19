@@ -1,7 +1,7 @@
 package service
 
 import (
-	"github.com/lorezi/golang-bank-app/domain"
+	"github.com/lorezi/golang-bank-app/dto"
 	"github.com/lorezi/golang-bank-app/errs"
 	"github.com/lorezi/golang-bank-app/ports"
 )
@@ -14,11 +14,32 @@ func NewCustomerService(repository ports.CustomerRepository) *DefaultCustomerSer
 	return &DefaultCustomerService{repo: repository}
 }
 
-func (s *DefaultCustomerService) GetAllCustomers(status string) ([]domain.Customer, *errs.AppError) {
+func (s *DefaultCustomerService) GetAllCustomers(status string) ([]dto.CustomerResponse, *errs.AppError) {
 
-	return s.repo.FindAll(status)
+	sc := []dto.CustomerResponse{}
+	customers, err := s.repo.FindAll(status)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, v := range customers {
+		res := v.DomainToDto()
+		sc = append(sc, *res)
+	}
+
+	return sc, nil
+
 }
 
-func (s *DefaultCustomerService) GetCustomer(id string) (*domain.Customer, *errs.AppError) {
-	return s.repo.GetById(id)
+func (s *DefaultCustomerService) GetCustomer(id string) (*dto.CustomerResponse, *errs.AppError) {
+	c, err := s.repo.GetById(id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	res := c.DomainToDto()
+
+	return res, nil
+
 }
