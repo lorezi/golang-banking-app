@@ -1,3 +1,3 @@
 ### Banking App
 
-Golang microservices Hexagonical implementation
+Golang microservices Hexagonal architecture implementation
