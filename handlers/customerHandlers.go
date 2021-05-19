@@ -35,14 +35,8 @@ func (c *CustomerHandlers) GetCustomer(w http.ResponseWriter, r *http.Request) {
 	paramID := mux.Vars(r)
 	customer, err := c.CustomerService.GetCustomer(paramID["customer_id"])
 
-	if r.Header.Get("Content-Type") == "application/xml" {
-		w.Header().Add("Content-Type", "application/xml")
-		xml.NewEncoder(w).Encode(customer)
-	}
-
-	w.Header().Add("Content-Type", "application/json")
-
 	if err != nil {
+		w.Header().Add("Content-Type", "application/json")
 		r := dto.Result{
 			Status:  "fail",
 			Message: "record not found",
@@ -52,6 +46,14 @@ func (c *CustomerHandlers) GetCustomer(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(r)
 		return
 	}
+
+	if r.Header.Get("Content-Type") == "application/xml" {
+		w.Header().Add("Content-Type", "application/xml")
+		xml.NewEncoder(w).Encode(customer)
+	}
+
+	w.Header().Add("Content-Type", "application/json")
+
 	// encode struct to json
 	json.NewEncoder(w).Encode(customer)
 
