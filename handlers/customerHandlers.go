@@ -26,10 +26,6 @@ func (ch *CustomerHandlers) GetAllCustomers(w http.ResponseWriter, r *http.Reque
 
 	response(w, http.StatusOK, customers)
 
-	w.Header().Add("Content-Type", "application/json")
-	// encode struct to json
-	json.NewEncoder(w).Encode(customers)
-
 }
 
 func (c *CustomerHandlers) GetCustomer(w http.ResponseWriter, r *http.Request) {
