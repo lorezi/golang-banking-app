@@ -37,13 +37,12 @@ func (c *CustomerHandlers) GetCustomer(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		w.Header().Add("Content-Type", "application/json")
-		r := dto.Result{
-			Status:  "fail",
-			Message: err.Error(),
+		w.WriteHeader(err.Code)
+		show := &dto.Result{
+			Status:  err.Status,
+			Message: err.Message,
 		}
-
-		w.WriteHeader(http.StatusNotFound)
-		json.NewEncoder(w).Encode(r)
+		json.NewEncoder(w).Encode(show)
 		return
 	}
 
