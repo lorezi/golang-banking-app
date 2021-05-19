@@ -6,6 +6,6 @@ import (
 )
 
 type CustomerRepository interface {
-	FindAll(status string) ([]domain.Customer, error)
+	FindAll(status string) ([]domain.Customer, *errs.AppError)
 	GetById(id string) (*domain.Customer, *errs.AppError)
 }

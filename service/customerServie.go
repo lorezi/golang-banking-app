@@ -14,7 +14,7 @@ func NewCustomerService(repository ports.CustomerRepository) *DefaultCustomerSer
 	return &DefaultCustomerService{repo: repository}
 }
 
-func (s *DefaultCustomerService) GetAllCustomers(status string) ([]domain.Customer, error) {
+func (s *DefaultCustomerService) GetAllCustomers(status string) ([]domain.Customer, *errs.AppError) {
 
 	return s.repo.FindAll(status)
 }

@@ -16,7 +16,7 @@ type CustomerRepositoryDb struct {
 	client *sql.DB
 }
 
-func (s *CustomerRepositoryDb) FindAll(status string) ([]domain.Customer, error) {
+func (s *CustomerRepositoryDb) FindAll(status string) ([]domain.Customer, *errs.AppError) {
 
 	allQry := "select customer_id, name, city, zipcode, date_of_birth, status from customers"
 
@@ -31,8 +31,13 @@ func (s *CustomerRepositoryDb) FindAll(status string) ([]domain.Customer, error)
 	rows, err := s.client.Query(allQry)
 
 	if err != nil {
-		log.Println("Error while querying customer table" + err.Error())
-		return nil, err
+		if err == sql.ErrNoRows {
+			msg := "Error while querying customer table"
+			return nil, errs.NotFoundError(msg, "fails")
+		}
+
+		log.Println("Error while querying customer table " + err.Error())
+		return nil, errs.UnExpectedError("unexpected database error", "error")
 	}
 
 	sc := []domain.Customer{}
@@ -41,7 +46,7 @@ func (s *CustomerRepositoryDb) FindAll(status string) ([]domain.Customer, error)
 		err := rows.Scan(&c.Id, &c.Name, &c.City, &c.Zipcode, &c.DateofBirth, &c.Status)
 		if err != nil {
 			log.Println("Error while scanning customers" + err.Error())
-			return nil, err
+			return nil, errs.UnExpectedError("unexpected database error", "error")
 		}
 
 		sc = append(sc, *c)
