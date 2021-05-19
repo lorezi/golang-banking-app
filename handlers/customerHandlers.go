@@ -6,7 +6,6 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/lorezi/golang-bank-app/dto"
 	"github.com/lorezi/golang-bank-app/ports"
 )
 
@@ -36,25 +35,29 @@ func (c *CustomerHandlers) GetCustomer(w http.ResponseWriter, r *http.Request) {
 	customer, err := c.CustomerService.GetCustomer(paramID["customer_id"])
 
 	if err != nil {
-		w.Header().Add("Content-Type", "application/json")
-		r := dto.Result{
-			Status:  "fail",
-			Message: "record not found",
-		}
-
-		w.WriteHeader(http.StatusNotFound)
-		json.NewEncoder(w).Encode(r)
+		response(w, err.Code, err.ShowError())
 		return
 	}
 
 	if r.Header.Get("Content-Type") == "application/xml" {
 		w.Header().Add("Content-Type", "application/xml")
-		xml.NewEncoder(w).Encode(customer)
+
+		if err := xml.NewEncoder(w).Encode(customer); err != nil {
+			panic(err)
+		}
+		return
+
 	}
 
+	response(w, http.StatusOK, customer)
+
+}
+
+func response(w http.ResponseWriter, code int, data interface{}) {
 	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(code)
 
-	// encode struct to json
-	json.NewEncoder(w).Encode(customer)
-
+	if err := json.NewEncoder(w).Encode(data); err != nil {
+		panic(err)
+	}
 }

@@ -2,12 +2,14 @@ package repositories
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 
 	"github.com/lorezi/golang-bank-app/domain"
+	"github.com/lorezi/golang-bank-app/errs"
 )
 
 type CustomerRepositoryDb struct {
@@ -48,7 +50,7 @@ func (s *CustomerRepositoryDb) FindAll(status string) ([]domain.Customer, error)
 	return sc, nil
 }
 
-func (s *CustomerRepositoryDb) GetById(id string) (*domain.Customer, error) {
+func (s *CustomerRepositoryDb) GetById(id string) (*domain.Customer, *errs.AppError) {
 	qry := "select customer_id, name, city, zipcode, date_of_birth, status from customers where customer_id = ?"
 
 	row := s.client.QueryRow(qry, id)
@@ -56,8 +58,14 @@ func (s *CustomerRepositoryDb) GetById(id string) (*domain.Customer, error) {
 	c := &domain.Customer{}
 	err := row.Scan(&c.Id, &c.Name, &c.City, &c.Zipcode, &c.DateofBirth, &c.Status)
 	if err != nil {
-		log.Println("Error while scanning customers" + err.Error())
-		return nil, err
+		if err == sql.ErrNoRows {
+			msg := fmt.Sprintf("customer with id: %v not found", id)
+			return nil, errs.NotFoundError(msg, "fails")
+		}
+
+		log.Println("Error while scanning customers " + err.Error())
+
+		return nil, errs.UnExpectedError("unexpected database error", "error")
 	}
 
 	return c, nil
