@@ -1,16 +1,29 @@
 package app
 
 import (
+	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/mux"
 	"github.com/lorezi/golang-bank-app/handlers"
 	"github.com/lorezi/golang-bank-app/repositories"
 	"github.com/lorezi/golang-bank-app/service"
+	"github.com/subosito/gotenv"
 )
 
+func sanitizeConfigs() {
+	if os.Getenv("SERVER_ADDRESS") == "" || os.Getenv("SERVER_PORT") == "" {
+		log.Fatal("Environment variable not defined...")
+	}
+
+}
+
 func Start() {
+	gotenv.Load()
+
+	sanitizeConfigs()
 
 	// Testing
 	// ch := handlers.CustomerHandlers{
@@ -33,5 +46,7 @@ func Start() {
 	// router.HandleFunc("/customers", ch.GetAllCustomers).Methods("GET")
 
 	// starting serve
-	log.Fatal(http.ListenAndServe(":8000", router))
+	addr := os.Getenv("SERVER_ADDRESS")
+	port := os.Getenv("SERVER_PORT")
+	log.Fatal(http.ListenAndServe(fmt.Sprintf("%s:%s", addr, port), router))
 }

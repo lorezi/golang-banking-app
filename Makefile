@@ -1,4 +1,6 @@
 APP?=banking_app
+SERVER_ADDRESS?=localhost
+SERVER_PORT?=8282
 
 .PHONY: build
 ## build: build the application
