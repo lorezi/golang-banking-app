@@ -13,3 +13,7 @@ type CustomerRepository interface {
 type AccountRepository interface {
 	Save(a domain.Account) (*domain.Account, *errs.AppError)
 }
+
+type TransactionRepository interface {
+	Save(a domain.Transaction) (*domain.Transaction, *errs.AppError)
+}
