@@ -15,5 +15,6 @@ type AccountRepository interface {
 }
 
 type TransactionRepository interface {
+	FindBy(id string) (*domain.Account, *errs.AppError)
 	Save(t domain.Transaction) (*domain.Transaction, *errs.AppError)
 }

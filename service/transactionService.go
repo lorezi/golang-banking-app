@@ -25,8 +25,19 @@ func (s DefaultTransactionService) CreateTransaction(req dto.TransactionRequest)
 		return nil, err
 	}
 
+	// server side validation for checking the available balance in the account
+	if req.IsTransactionTypeWithdrawal() {
+		acct, err := s.repo.FindBy(req.AccountId)
+		if err != nil {
+			return nil, err
+		}
+
+		if !acct.CanWithdraw(req.Amount) {
+			return nil, errs.ValidationError("Insufficient balance in the accout", "fail")
+		}
+	}
+
 	t := domain.Transaction{
-		TransactionId:   "",
 		AccountId:       req.AccountId,
 		Amount:          req.Amount,
 		TransactionType: req.TransactionType,

@@ -62,7 +62,7 @@ func Start() {
 
 	router.HandleFunc("/customers/{customer_id:[a-zA-Z0-9_]+}/account", ah.CreateAccount).Methods("POST")
 
-	router.HandleFunc("/accounts/{account_id:[a-zA-Z0-9_]+}", th.CreateTransaction).Methods("POST")
+	router.HandleFunc("/customers/{customer_id:[a-zA-Z0-9_]+}/account/{account_id:[a-zA-Z0-9_]+}", th.CreateTransaction).Methods("POST")
 
 	// starting serve
 	addr := os.Getenv("SERVER_ADDRESS")

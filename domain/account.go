@@ -18,3 +18,7 @@ func (c Account) DomainToDto() *dto.NewAccountResponse {
 	}
 
 }
+
+func (a Account) CanWithdraw(amount float64) bool {
+	return a.Amount > amount
+}

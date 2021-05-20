@@ -15,7 +15,10 @@ type TransactionHandler struct {
 }
 
 func (th TransactionHandler) CreateTransaction(w http.ResponseWriter, r *http.Request) {
-	accountId := mux.Vars(r)["account_id"]
+	// retrieve the account_id and customer_id from the URL
+	vars := mux.Vars(r)
+	accountId := vars["account_id"]
+	customerId := vars["customer_id"]
 
 	req := dto.TransactionRequest{}
 
@@ -25,6 +28,7 @@ func (th TransactionHandler) CreateTransaction(w http.ResponseWriter, r *http.Re
 	}
 
 	req.AccountId = accountId
+	req.CustomerId = customerId
 
 	res, err := th.Service.CreateTransaction(req)
 	if err != nil {
