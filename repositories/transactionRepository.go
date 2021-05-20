@@ -9,11 +9,15 @@ import (
 	"github.com/lorezi/golang-bank-app/logger"
 )
 
-type TransactionRepository struct {
+type TransactionRepositoryDb struct {
 	client *sqlx.DB
 }
 
-func (tr TransactionRepository) Save(t domain.Transaction) (*domain.Transaction, *errs.AppError) {
+func NewTransactionRepositoryDb(dbClient *sqlx.DB) TransactionRepositoryDb {
+	return TransactionRepositoryDb{client: dbClient}
+}
+
+func (tr TransactionRepositoryDb) Save(t domain.Transaction) (*domain.Transaction, *errs.AppError) {
 
 	insert := "INSERT INTO transactions (transaction_id, account_id, amount, transaction_type, transaction_date) values(?,?,?,?,?)"
 
