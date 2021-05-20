@@ -9,3 +9,7 @@ type CustomerService interface {
 	GetAllCustomers(status string) ([]dto.CustomerResponse, *errs.AppError)
 	GetCustomer(id string) (*dto.CustomerResponse, *errs.AppError)
 }
+
+// type AccountService interface {
+// 	CreateAccount(domain.)
+// }

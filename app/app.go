@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/gorilla/mux"
+	"github.com/lorezi/golang-bank-app/db"
 	"github.com/lorezi/golang-bank-app/handlers"
 	"github.com/lorezi/golang-bank-app/repositories"
 	"github.com/lorezi/golang-bank-app/service"
@@ -24,6 +25,13 @@ func Start() {
 	gotenv.Load()
 
 	sanitizeConfigs()
+	// created multiplexer
+	router := mux.NewRouter()
+
+	dbClient := db.Connect()
+
+	customerRepo := repositories.NewCustomerRepositoryDb(dbClient)
+	// accountRepo := repositories.NewAccountRepositoryDb(dbClient)
 
 	// Testing
 	// ch := handlers.CustomerHandlers{
@@ -32,11 +40,8 @@ func Start() {
 
 	// wiring
 	ch := handlers.CustomerHandlers{
-		CustomerService: service.NewCustomerService(repositories.NewCustomerRepositoryDb()),
+		CustomerService: service.NewCustomerService(customerRepo),
 	}
-
-	// created multiplexer
-	router := mux.NewRouter()
 
 	// defining routes
 

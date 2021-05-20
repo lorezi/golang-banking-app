@@ -11,5 +11,5 @@ type CustomerRepository interface {
 }
 
 type AccountRepository interface {
-	Save(domain.Account) (*domain.Account, *errs.AppError)
+	Save(a domain.Account) (*domain.Account, *errs.AppError)
 }
