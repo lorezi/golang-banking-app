@@ -15,5 +15,5 @@ type AccountRepository interface {
 }
 
 type TransactionRepository interface {
-	Save(a domain.Transaction) (*domain.Transaction, *errs.AppError)
+	Save(t domain.Transaction) (*domain.Transaction, *errs.AppError)
 }
