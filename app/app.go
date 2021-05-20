@@ -10,9 +10,11 @@ import (
 	"github.com/lorezi/golang-bank-app/handlers"
 	"github.com/lorezi/golang-bank-app/repositories"
 	"github.com/lorezi/golang-bank-app/service"
+	"github.com/subosito/gotenv"
 )
 
 func Start() {
+	gotenv.Load()
 
 	// Testing
 	// ch := handlers.CustomerHandlers{

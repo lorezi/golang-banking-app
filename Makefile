@@ -1,10 +1,12 @@
 APP?=banking_app
+SERVER_ADDRESS?=localhost
+SERVER_PORT?=8282
 
 .PHONY: build
 ## build: build the application
 build: clean
 	@echo "Building..."
-	@go build -o ${APP} main.go
+	SERVER_ADDRESS=localhost SERVER_PORT=8282 go build -o ${APP} main.go
 
 .PHONY: run
 ## run: runs the go run build-binary
