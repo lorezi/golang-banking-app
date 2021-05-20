@@ -19,9 +19,9 @@ func NewTransactionRepositoryDb(dbClient *sqlx.DB) TransactionRepositoryDb {
 
 func (tr TransactionRepositoryDb) Save(t domain.Transaction) (*domain.Transaction, *errs.AppError) {
 
-	insert := "INSERT INTO transactions (transaction_id, account_id, amount, transaction_type, transaction_date) values(?,?,?,?,?)"
+	insert := "INSERT INTO transactions (account_id, amount, transaction_type, transaction_date) values(?,?,?,?)"
 
-	res, err := tr.client.Exec(insert, t.TransactionId, t.AccountId, t.Amount, t.TransactionType, t.TransactionDate)
+	res, err := tr.client.Exec(insert, t.AccountId, t.Amount, t.TransactionType, t.TransactionDate)
 
 	if err != nil {
 		logger.Error("error while processing a new transaction: " + err.Error())
