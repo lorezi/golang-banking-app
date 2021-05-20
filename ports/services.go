@@ -11,5 +11,5 @@ type CustomerService interface {
 }
 
 type AccountService interface {
-	CreateAccount(*dto.AccountResponse, *errs.AppError)
+	CreateAccount(req dto.NewAccountRequest) (*dto.NewAccountResponse, *errs.AppError)
 }

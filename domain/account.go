@@ -1,5 +1,7 @@
 package domain
 
+import "github.com/lorezi/golang-bank-app/dto"
+
 type Account struct {
 	AccountId   string  `db:"account_id"`
 	CustomerId  string  `db:"customer_id"`
@@ -7,4 +9,12 @@ type Account struct {
 	AccountType string  `db:"account_type"`
 	Amount      float64 `db:"amount"`
 	Status      bool    `db:"status"`
+}
+
+func (c Account) DomainToDto() *dto.NewAccountResponse {
+
+	return &dto.NewAccountResponse{
+		AccountId: c.AccountId,
+	}
+
 }
