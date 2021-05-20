@@ -3,9 +3,6 @@ package repositories
 import (
 	"database/sql"
 	"fmt"
-	"os"
-
-	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
@@ -67,21 +64,7 @@ func (c *CustomerRepositoryDb) GetById(id string) (*domain.Customer, *errs.AppEr
 	return customer, nil
 }
 
-func NewCustomerRepositoryDb() *CustomerRepositoryDb {
-	dbUser := os.Getenv("DB_USER")
-	dbPwd := os.Getenv("DB_PWD")
-	dbAddr := os.Getenv("DB_ADDR")
-	dbPort := os.Getenv("DB_PORT")
-	dbName := os.Getenv("DB_NAME")
+func NewCustomerRepositoryDb(dbClient *sqlx.DB) *CustomerRepositoryDb {
 
-	c, err := sqlx.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", dbUser, dbPwd, dbAddr, dbPort, dbName))
-	if err != nil {
-		panic(err)
-	}
-	// See "Important settings" section.
-	c.SetConnMaxLifetime(time.Minute * 3)
-	c.SetMaxOpenConns(10)
-	c.SetMaxIdleConns(10)
-
-	return &CustomerRepositoryDb{client: c}
+	return &CustomerRepositoryDb{client: dbClient}
 }

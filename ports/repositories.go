@@ -9,3 +9,7 @@ type CustomerRepository interface {
 	FindAll(status string) ([]domain.Customer, *errs.AppError)
 	GetById(id string) (*domain.Customer, *errs.AppError)
 }
+
+type AccountRepository interface {
+	Save(a domain.Account) (*domain.Account, *errs.AppError)
+}

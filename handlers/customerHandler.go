@@ -9,11 +9,12 @@ import (
 	"github.com/lorezi/golang-bank-app/ports"
 )
 
-type CustomerHandlers struct {
+// inject custom service into customer handler
+type CustomerHandler struct {
 	CustomerService ports.CustomerService
 }
 
-func (ch *CustomerHandlers) GetAllCustomers(w http.ResponseWriter, r *http.Request) {
+func (ch *CustomerHandler) GetAllCustomers(w http.ResponseWriter, r *http.Request) {
 
 	status := r.URL.Query().Get("status")
 
@@ -28,7 +29,7 @@ func (ch *CustomerHandlers) GetAllCustomers(w http.ResponseWriter, r *http.Reque
 
 }
 
-func (c *CustomerHandlers) GetCustomer(w http.ResponseWriter, r *http.Request) {
+func (c *CustomerHandler) GetCustomer(w http.ResponseWriter, r *http.Request) {
 	paramID := mux.Vars(r)
 	customer, err := c.CustomerService.GetCustomer(paramID["customer_id"])
 

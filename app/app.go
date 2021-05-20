@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/gorilla/mux"
+	"github.com/lorezi/golang-bank-app/db"
 	"github.com/lorezi/golang-bank-app/handlers"
 	"github.com/lorezi/golang-bank-app/repositories"
 	"github.com/lorezi/golang-bank-app/service"
@@ -24,6 +25,14 @@ func Start() {
 	gotenv.Load()
 
 	sanitizeConfigs()
+	// created multiplexer
+	router := mux.NewRouter()
+
+	dbClient := db.Connect()
+
+	customerRepo := repositories.NewCustomerRepositoryDb(dbClient)
+	accountRepo := repositories.NewAccountRepositoryDb(dbClient)
+	// accountRepo := repositories.NewAccountRepositoryDb(dbClient)
 
 	// Testing
 	// ch := handlers.CustomerHandlers{
@@ -31,18 +40,21 @@ func Start() {
 	// }
 
 	// wiring
-	ch := handlers.CustomerHandlers{
-		CustomerService: service.NewCustomerService(repositories.NewCustomerRepositoryDb()),
+	ch := handlers.CustomerHandler{
+		CustomerService: service.NewCustomerService(customerRepo),
 	}
 
-	// created multiplexer
-	router := mux.NewRouter()
+	ah := handlers.AccountHandler{
+		AccountService: service.NewAccountService(accountRepo),
+	}
 
 	// defining routes
 
 	router.HandleFunc("/customers", ch.GetAllCustomers).Methods("GET")
 	// allow customer id with only alpha numeric and underscore character
 	router.HandleFunc("/customers/{customer_id:[a-zA-Z0-9_]+}", ch.GetCustomer).Methods("GET")
+	router.HandleFunc("/customers/{customer_id:[a-zA-Z0-9_]+}/account", ah.CreateAccount).Methods("POST")
+
 	// router.HandleFunc("/customers", ch.GetAllCustomers).Methods("GET")
 
 	// starting serve
