@@ -13,8 +13,17 @@ import (
 	"github.com/subosito/gotenv"
 )
 
+func sanitizeConfigs() {
+	if os.Getenv("SERVER_ADDRESS") == "" || os.Getenv("SERVER_PORT") == "" {
+		log.Fatal("Environment variable not defined...")
+	}
+
+}
+
 func Start() {
 	gotenv.Load()
+
+	sanitizeConfigs()
 
 	// Testing
 	// ch := handlers.CustomerHandlers{

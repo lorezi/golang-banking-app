@@ -3,6 +3,7 @@ package repositories
 import (
 	"database/sql"
 	"fmt"
+	"os"
 
 	"time"
 
@@ -67,7 +68,13 @@ func (c *CustomerRepositoryDb) GetById(id string) (*domain.Customer, *errs.AppEr
 }
 
 func NewCustomerRepositoryDb() *CustomerRepositoryDb {
-	c, err := sqlx.Open("mysql", "root:root@tcp(localhost:3306)/banking")
+	dbUser := os.Getenv("DB_USER")
+	dbPwd := os.Getenv("DB_PWD")
+	dbAddr := os.Getenv("DB_ADDR")
+	dbPort := os.Getenv("DB_PORT")
+	dbName := os.Getenv("DB_NAME")
+
+	c, err := sqlx.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", dbUser, dbPwd, dbAddr, dbPort, dbName))
 	if err != nil {
 		panic(err)
 	}
