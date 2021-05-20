@@ -10,6 +10,6 @@ type CustomerService interface {
 	GetCustomer(id string) (*dto.CustomerResponse, *errs.AppError)
 }
 
-// type AccountService interface {
-// 	CreateAccount(domain.)
-// }
+type AccountService interface {
+	CreateAccount(*dto.AccountResponse, *errs.AppError)
+}
