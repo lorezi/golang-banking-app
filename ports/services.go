@@ -13,3 +13,7 @@ type CustomerService interface {
 type AccountService interface {
 	CreateAccount(req dto.NewAccountRequest) (*dto.NewAccountResponse, *errs.AppError)
 }
+
+type TransactionService interface {
+	CreateTransaction(req dto.TransactionRequest) (*dto.TransactionResponse, *errs.AppError)
+}

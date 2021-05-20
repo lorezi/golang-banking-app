@@ -32,6 +32,7 @@ func Start() {
 
 	customerRepo := repositories.NewCustomerRepositoryDb(dbClient)
 	accountRepo := repositories.NewAccountRepositoryDb(dbClient)
+	transactionRepo := repositories.NewTransactionRepositoryDb(dbClient)
 	// accountRepo := repositories.NewAccountRepositoryDb(dbClient)
 
 	// Testing
@@ -48,14 +49,20 @@ func Start() {
 		AccountService: service.NewAccountService(accountRepo),
 	}
 
+	th := handlers.TransactionHandler{
+		Service: service.NewTransactionService(transactionRepo),
+	}
+
 	// defining routes
 
 	router.HandleFunc("/customers", ch.GetAllCustomers).Methods("GET")
+
 	// allow customer id with only alpha numeric and underscore character
 	router.HandleFunc("/customers/{customer_id:[a-zA-Z0-9_]+}", ch.GetCustomer).Methods("GET")
+
 	router.HandleFunc("/customers/{customer_id:[a-zA-Z0-9_]+}/account", ah.CreateAccount).Methods("POST")
 
-	// router.HandleFunc("/customers", ch.GetAllCustomers).Methods("GET")
+	router.HandleFunc("/customers/{customer_id:[a-zA-Z0-9_]+}/account/{account_id:[a-zA-Z0-9_]+}", th.CreateTransaction).Methods("POST")
 
 	// starting serve
 	addr := os.Getenv("SERVER_ADDRESS")
