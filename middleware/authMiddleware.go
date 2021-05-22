@@ -49,7 +49,7 @@ func (a AuthMiddleware) Authentication() func(http.Handler) http.Handler {
 					next.ServeHTTP(w, r)
 					return
 				}
-				err := errs.AppError{Code: http.StatusForbidden, Status: "authentication failure", Message: "invalid token"}
+				err := errs.AppError{Code: http.StatusUnauthorized, Status: "authentication failure", Message: "invalid token"}
 				utils.Response(w, err.Code, err.ShowError())
 				return
 			}
