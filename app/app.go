@@ -71,14 +71,14 @@ func Start() {
 
 	// defining routes
 
-	router.HandleFunc("/customers", ch.GetAllCustomers).Methods("GET").Name("GetCustomers")
+	router.HandleFunc("/customers", ch.GetAllCustomers).Methods("GET").Name("Get_Customers")
 
 	// allow customer id with only alpha numeric and underscore character
-	router.HandleFunc("/customers/{customer_id:[a-zA-Z0-9_]+}", ch.GetCustomer).Methods("GET").Name("GetCustomer")
+	router.HandleFunc("/customers/{customer_id:[a-zA-Z0-9_]+}", ch.GetCustomer).Methods("GET").Name("Get_Customer")
 
-	router.HandleFunc("/customers/{customer_id:[a-zA-Z0-9_]+}/account", ah.CreateAccount).Methods("POST").Name("NewAccount")
+	router.HandleFunc("/customers/{customer_id:[a-zA-Z0-9_]+}/account", ah.CreateAccount).Methods("POST").Name("New_Account")
 
-	router.HandleFunc("/customers/{customer_id:[a-zA-Z0-9_]+}/account/{account_id:[a-zA-Z0-9_]+}", th.CreateTransaction).Methods("POST").Name("NewTransaction")
+	router.HandleFunc("/customers/{customer_id:[a-zA-Z0-9_]+}/account/{account_id:[a-zA-Z0-9_]+}", th.CreateTransaction).Methods("POST").Name("New_Transaction")
 
 	authMiddleware := middleware.AuthMiddleware{Repo: repositories.NewAuthRepository()}
 	router.Use(authMiddleware.Authentication())
