@@ -20,7 +20,6 @@ type RemoteAuthRepository struct {
 func (r RemoteAuthRepository) IsAuthorized(token string, routeName string, vars map[string]string) bool {
 	u := buildVerifyURL(token, routeName, vars)
 
-	// fmt.Println(u)
 	res, err := http.Get(u)
 
 	if err != nil {
@@ -29,6 +28,7 @@ func (r RemoteAuthRepository) IsAuthorized(token string, routeName string, vars 
 	}
 
 	m := map[string]bool{}
+
 	if err := json.NewDecoder(res.Body).Decode(&m); err != nil {
 		logger.Error("Error while decoding response from auth server:" + err.Error())
 		return false
