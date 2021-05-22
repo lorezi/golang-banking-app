@@ -9,14 +9,31 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/lorezi/golang-bank-app/db"
 	"github.com/lorezi/golang-bank-app/handlers"
+	"github.com/lorezi/golang-bank-app/logger"
+	"github.com/lorezi/golang-bank-app/middleware"
 	"github.com/lorezi/golang-bank-app/repositories"
 	"github.com/lorezi/golang-bank-app/service"
 	"github.com/subosito/gotenv"
 )
 
 func sanitizeConfigs() {
-	if os.Getenv("SERVER_ADDRESS") == "" || os.Getenv("SERVER_PORT") == "" {
-		log.Fatal("Environment variable not defined...")
+	envProps := []string{
+		"SERVER_ADDRESS",
+		"SERVER_PORT",
+		"DB_USER",
+		"DB_PWD",
+		"DB_ADDR",
+		"DB_PORT",
+		"DB_NAME",
+		"AUTH_SERVER",
+		"AUTH_SERVER_PORT",
+		"PATH",
+	}
+
+	for _, v := range envProps {
+		if os.Getenv(v) == "" {
+			logger.Error(fmt.Sprintf("Environment variable %s not defined. Terminating application...", v))
+		}
 	}
 
 }
@@ -33,7 +50,6 @@ func Start() {
 	customerRepo := repositories.NewCustomerRepositoryDb(dbClient)
 	accountRepo := repositories.NewAccountRepositoryDb(dbClient)
 	transactionRepo := repositories.NewTransactionRepositoryDb(dbClient)
-	// accountRepo := repositories.NewAccountRepositoryDb(dbClient)
 
 	// Testing
 	// ch := handlers.CustomerHandlers{
@@ -55,14 +71,17 @@ func Start() {
 
 	// defining routes
 
-	router.HandleFunc("/customers", ch.GetAllCustomers).Methods("GET")
+	router.HandleFunc("/customers", ch.GetAllCustomers).Methods("GET").Name("GetCustomers")
 
 	// allow customer id with only alpha numeric and underscore character
-	router.HandleFunc("/customers/{customer_id:[a-zA-Z0-9_]+}", ch.GetCustomer).Methods("GET")
+	router.HandleFunc("/customers/{customer_id:[a-zA-Z0-9_]+}", ch.GetCustomer).Methods("GET").Name("GetCustomer")
 
-	router.HandleFunc("/customers/{customer_id:[a-zA-Z0-9_]+}/account", ah.CreateAccount).Methods("POST")
+	router.HandleFunc("/customers/{customer_id:[a-zA-Z0-9_]+}/account", ah.CreateAccount).Methods("POST").Name("NewAccount")
 
-	router.HandleFunc("/customers/{customer_id:[a-zA-Z0-9_]+}/account/{account_id:[a-zA-Z0-9_]+}", th.CreateTransaction).Methods("POST")
+	router.HandleFunc("/customers/{customer_id:[a-zA-Z0-9_]+}/account/{account_id:[a-zA-Z0-9_]+}", th.CreateTransaction).Methods("POST").Name("NewTransaction")
+
+	authMiddleware := middleware.AuthMiddleware{Repo: repositories.NewAuthRepository()}
+	router.Use(authMiddleware.Authentication())
 
 	// starting serve
 	addr := os.Getenv("SERVER_ADDRESS")
