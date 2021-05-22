@@ -18,3 +18,7 @@ type TransactionRepository interface {
 	FindBy(id string) (*domain.Account, *errs.AppError)
 	Save(t domain.Transaction) (*domain.Transaction, *errs.AppError)
 }
+
+type AuthRepository interface {
+	IsAuthorized(token string, routeName string, vars map[string]string) bool
+}

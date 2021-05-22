@@ -38,3 +38,11 @@ func ValidationError(message string, status string) *AppError {
 		Message: message,
 	}
 }
+
+func UnauthorizedError(message string, status string) *AppError {
+	return &AppError{
+		Code:    http.StatusUnauthorized,
+		Status:  status,
+		Message: message,
+	}
+}
