@@ -11,6 +11,25 @@ import (
 	"github.com/lorezi/golang-bank-app/mocks"
 )
 
+var mk *mocks.MockAccountRepository
+var s *DefaultAccountService
+
+// mock and service global setup
+func setup(t *testing.T) func() {
+
+	// mock setup
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+	mk = mocks.NewMockAccountRepository(ctrl)
+
+	// service setup
+	s = NewAccountService(mk)
+
+	return func() {
+		defer ctrl.Finish()
+	}
+}
+
 func Test_should_return_validation_error_response_when_the_new_account_request_fails_validation(t *testing.T) {
 	// Arrange
 	req := dto.NewAccountRequest{
@@ -32,10 +51,8 @@ func Test_should_return_validation_error_response_when_the_new_account_request_f
 
 func Test_should_return_server_side_error_when_the_new_account_is_not_created(t *testing.T) {
 	// Arrange
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-	mk := mocks.NewMockAccountRepository(ctrl)
-	s := NewAccountService(mk)
+	teardown := setup(t)
+	defer teardown()
 
 	req := dto.NewAccountRequest{
 		CustomerId:  "100",
