@@ -1,8 +1,6 @@
 package service
 
 import (
-	"time"
-
 	"github.com/lorezi/golang-bank-app/domain"
 	"github.com/lorezi/golang-bank-app/dto"
 	"github.com/lorezi/golang-bank-app/errs"
@@ -20,27 +18,16 @@ func NewAccountService(repo ports.AccountRepository) *DefaultAccountService {
 func (s DefaultAccountService) CreateAccount(req dto.NewAccountRequest) (*dto.NewAccountResponse, *errs.AppError) {
 
 	// validate request
-	err := req.Validate()
-
-	if err != nil {
+	if err := req.Validate(); err != nil {
 		return nil, err
 	}
 
-	// transform dto to domain
-	a := domain.Account{
-		AccountId:   "",
-		CustomerId:  req.CustomerId,
-		OpeningDate: time.Now().Format("2006-01-02 15:04:05"),
-		AccountType: req.AccountType,
-		Amount:      req.Amount,
-		Status:      true,
-	}
+	a := domain.DtoToDomain(req)
 
 	newAcct, err := s.repo.Save(a)
 	if err != nil {
 		return nil, err
 	}
 
-	res := newAcct.DomainToDto()
-	return res, nil
+	return newAcct.DomainToDto(), nil
 }
