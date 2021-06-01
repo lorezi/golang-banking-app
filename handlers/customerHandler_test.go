@@ -12,13 +12,31 @@ import (
 	"github.com/lorezi/golang-bank-app/mocks"
 )
 
+var r *mux.Router
+var ch CustomerHandler
+var mck *mocks.MockCustomerService
+
+func setup(t *testing.T) func() {
+	ctrl := gomock.NewController(t)
+
+	mck = mocks.NewMockCustomerService(ctrl)
+	ch = CustomerHandler{CustomerService: mck}
+	r = mux.NewRouter()
+
+	r.HandleFunc("/customers", ch.GetAllCustomers)
+
+	return func() {
+		r = nil
+		defer ctrl.Finish()
+	}
+}
+
 func Test_should_return_customers_with_status_code_200(t *testing.T) {
 
 	// Arrange ---> set up mock services
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
+	tearDown := setup(t)
+	defer tearDown()
 
-	mck := mocks.NewMockCustomerService(ctrl)
 	dummyCustomers := []dto.CustomerResponse{
 		{
 			Name: "John Doe", City: "New York", Zipcode: "1100034", DateofBirth: "2000-01-04", Status: "true", Id: "100001",
@@ -28,11 +46,6 @@ func Test_should_return_customers_with_status_code_200(t *testing.T) {
 		},
 	}
 	mck.EXPECT().GetAllCustomers("").Return(dummyCustomers, nil)
-	ch := CustomerHandler{CustomerService: mck}
-
-	r := mux.NewRouter()
-	r.HandleFunc("/customers", ch.GetAllCustomers)
-
 	req, _ := http.NewRequest(http.MethodGet, "/customers", nil)
 
 	// Act
@@ -49,16 +62,12 @@ func Test_should_return_customers_with_status_code_200(t *testing.T) {
 func Test_should_return_customers_with_status_code_500_with_error_message(t *testing.T) {
 
 	// Arrange ---> set up mock services
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
+	tearDown := setup(t)
+	defer tearDown()
 
-	mck := mocks.NewMockCustomerService(ctrl)
 	mck.EXPECT().GetAllCustomers("").Return(nil, errs.UnExpectedError("some database error", "fail"))
-	ch := CustomerHandler{CustomerService: mck}
 
-	r := mux.NewRouter()
 	r.HandleFunc("/customers", ch.GetAllCustomers)
-
 	req, _ := http.NewRequest(http.MethodGet, "/customers", nil)
 
 	// Act
