@@ -8,6 +8,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/gorilla/mux"
 	"github.com/lorezi/golang-bank-app/dto"
+	"github.com/lorezi/golang-bank-app/errs"
 	"github.com/lorezi/golang-bank-app/mocks"
 )
 
@@ -43,4 +44,29 @@ func Test_should_return_customers_with_status_code_200(t *testing.T) {
 		t.Error("Failed while testing the status code")
 	}
 
+}
+
+func Test_should_return_customers_with_status_code_500_with_error_message(t *testing.T) {
+
+	// Arrange ---> set up mock services
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mck := mocks.NewMockCustomerService(ctrl)
+	mck.EXPECT().GetAllCustomers("").Return(nil, errs.UnExpectedError("some database error", "fail"))
+	ch := CustomerHandler{CustomerService: mck}
+
+	r := mux.NewRouter()
+	r.HandleFunc("/customers", ch.GetAllCustomers)
+
+	req, _ := http.NewRequest(http.MethodGet, "/customers", nil)
+
+	// Act
+	rec := httptest.NewRecorder()
+	r.ServeHTTP(rec, req)
+
+	// Assert
+	if rec.Code != http.StatusInternalServerError {
+		t.Error("Failed while testing the status code")
+	}
 }
