@@ -21,6 +21,7 @@ func (s DefaultAccountService) CreateAccount(req dto.NewAccountRequest) (*dto.Ne
 
 	// validate request
 	err := req.Validate()
+
 	if err != nil {
 		return nil, err
 	}
