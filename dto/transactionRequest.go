@@ -1,8 +1,6 @@
 package dto
 
 import (
-	"strings"
-
 	"github.com/lorezi/golang-bank-app/errs"
 )
 
@@ -20,7 +18,7 @@ type TransactionRequest struct {
 
 func (t TransactionRequest) Validate() *errs.AppError {
 
-	if strings.ToLower(t.TransactionType) != WITHDRAWAL && strings.ToLower(t.TransactionType) != DEPOSIT {
+	if !t.IsTransactionTypeWithdrawal() && !t.IsTransactionTypeDeposit() {
 		return errs.ValidationError("The transaction type must be withdrawal or deposit", "fail")
 	}
 
@@ -32,6 +30,9 @@ func (t TransactionRequest) Validate() *errs.AppError {
 }
 
 func (t TransactionRequest) IsTransactionTypeWithdrawal() bool {
+	return t.TransactionType == WITHDRAWAL
+}
 
-	return true
+func (t TransactionRequest) IsTransactionTypeDeposit() bool {
+	return t.TransactionType == DEPOSIT
 }
