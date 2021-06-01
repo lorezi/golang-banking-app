@@ -1,6 +1,10 @@
 package domain
 
-import "github.com/lorezi/golang-bank-app/dto"
+import (
+	"time"
+
+	"github.com/lorezi/golang-bank-app/dto"
+)
 
 type Account struct {
 	AccountId   string  `db:"account_id"`
@@ -21,4 +25,15 @@ func (c Account) DomainToDto() *dto.NewAccountResponse {
 
 func (a Account) CanWithdraw(amount float64) bool {
 	return a.Amount > amount
+}
+
+func DtoToDomain(req dto.NewAccountRequest) Account {
+	return Account{
+		AccountId:   "",
+		CustomerId:  req.CustomerId,
+		OpeningDate: time.Now().Format("2006-01-02 15:04:05"),
+		AccountType: req.AccountType,
+		Amount:      req.Amount,
+		Status:      true,
+	}
 }
