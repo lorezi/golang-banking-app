@@ -77,3 +77,39 @@ func Test_should_return_server_side_error_when_the_new_account_is_not_created(t 
 		t.Error("failed while testing the new account creation")
 	}
 }
+
+func Test_should_return_new_account_response_when_account_is_created_successfully(t *testing.T) {
+	// Arrange
+	teardown := setup(t)
+	defer teardown()
+
+	req := dto.NewAccountRequest{
+		CustomerId:  "100",
+		AccountType: "savings",
+		Amount:      6000,
+	}
+	acct := domain.Account{
+		CustomerId:  req.CustomerId,
+		OpeningDate: time.Now().Format("2006-01-02 15:04:05"),
+		AccountType: req.AccountType,
+		Amount:      req.Amount,
+		Status:      true,
+	}
+
+	acctWithId := acct
+	acctWithId.AccountId = "200"
+
+	mk.EXPECT().Save(acct).Return(&acctWithId, nil)
+
+	// Act
+	newAcct, err := s.CreateAccount(req)
+
+	// Assert
+	if err != nil {
+		t.Error("Test failed while creating new account")
+	}
+
+	if newAcct.AccountId != acctWithId.AccountId {
+		t.Error("Test failed while matching new account id")
+	}
+}
