@@ -27,7 +27,6 @@ func sanitizeConfigs() {
 		"DB_NAME",
 		"AUTH_SERVER",
 		"AUTH_SERVER_PORT",
-		"PATH",
 	}
 
 	for _, v := range envProps {
