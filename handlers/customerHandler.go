@@ -1,12 +1,12 @@
 package handlers
 
 import (
-	"encoding/json"
 	"encoding/xml"
 	"net/http"
 
 	"github.com/gorilla/mux"
 	"github.com/lorezi/golang-bank-app/ports"
+	"github.com/lorezi/golang-bank-app/utils"
 )
 
 // inject custom service into customer handler
@@ -21,11 +21,11 @@ func (ch *CustomerHandler) GetAllCustomers(w http.ResponseWriter, r *http.Reques
 	customers, err := ch.CustomerService.GetAllCustomers(status)
 
 	if err != nil {
-		response(w, err.Code, err.ShowError())
+		utils.Response(w, err.Code, err.ShowError())
 		return
 	}
 
-	response(w, http.StatusOK, customers)
+	utils.Response(w, http.StatusOK, customers)
 
 }
 
@@ -34,7 +34,7 @@ func (c *CustomerHandler) GetCustomer(w http.ResponseWriter, r *http.Request) {
 	customer, err := c.CustomerService.GetCustomer(paramID["customer_id"])
 
 	if err != nil {
-		response(w, err.Code, err.ShowError())
+		utils.Response(w, err.Code, err.ShowError())
 		return
 	}
 
@@ -48,15 +48,6 @@ func (c *CustomerHandler) GetCustomer(w http.ResponseWriter, r *http.Request) {
 
 	}
 
-	response(w, http.StatusOK, customer)
+	utils.Response(w, http.StatusOK, customer)
 
-}
-
-func response(w http.ResponseWriter, code int, data interface{}) {
-	w.Header().Add("Content-Type", "application/json")
-	w.WriteHeader(code)
-
-	if err := json.NewEncoder(w).Encode(data); err != nil {
-		panic(err)
-	}
 }
