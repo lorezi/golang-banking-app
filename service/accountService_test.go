@@ -24,3 +24,11 @@ func Test_should_return_validation_error_response_when_the_new_account_request_f
 		t.Error("failed while testing the new account validation")
 	}
 }
+
+func Test_should_return_server_side_error_when_the_new_account_is_not_created(t *testing.T) {
+	// Arrange
+
+	// Act
+
+	// Assert
+}

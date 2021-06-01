@@ -10,6 +10,7 @@ type CustomerRepository interface {
 	GetById(id string) (*domain.Customer, *errs.AppError)
 }
 
+//go:generate mockgen -destination=../mocks/mockAccountRepository.go -package=mocks github.com/lorezi/golang-bank-app/ports AccountRepository
 type AccountRepository interface {
 	Save(a domain.Account) (*domain.Account, *errs.AppError)
 }
