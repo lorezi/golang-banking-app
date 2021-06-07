@@ -1,3 +1,4 @@
 banking_app
 .data
 .env
+.DS_Store

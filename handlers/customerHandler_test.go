@@ -12,6 +12,8 @@ import (
 	"github.com/lorezi/golang-bank-app/mocks"
 )
 
+// writing handler test you mock up third party services
+
 var r *mux.Router
 var ch CustomerHandler
 var mck *mocks.MockCustomerService
